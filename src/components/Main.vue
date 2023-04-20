@@ -16,9 +16,14 @@
           {{ guest.tickets }}
         </td>
         <td>Edit</td>
-        <td>Delete</td>
+        <td @click.prevent="deleteGuest(index)">Delete</td>
       </tr>
     </table>
+    <br /><br />
+    <button>Create New Guest</button>
+    <button type="reset" @click.prevent="resetGuests">
+      Oops, Deleted All Guests
+    </button>
   </div>
 </template>
 
@@ -35,7 +40,19 @@ export default {
   },
   async created() {
     this.guests = await repo.load();
-    return this.guests;
+  },
+  methods: {
+    addNewGuest: async function (guest) {
+      let NewGuestsArray = [...this.guests, guest];
+      this.guests = await repo.save(NewGuestsArray);
+    },
+    deleteGuest: async function (index) {
+      this.guests.splice(index, 1);
+      await repo.save(this.guests);
+    },
+    resetGuests: async function () {
+      this.guests = await repo.reset();
+    },
   },
 };
 </script>
