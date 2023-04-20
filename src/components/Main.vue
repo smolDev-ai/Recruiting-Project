@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Nyan Cat's Performance</h1>
+    <strong>Total Number of Guests:</strong> {{ guestCount }}<br /><br />
     <table>
       <tr>
         <th>E-mail</th>
@@ -20,6 +21,7 @@
       </tr>
     </table>
     <br /><br />
+    <GuestForm @addNewGuest="addNewGuest" />
     <button>Create New Guest</button>
     <button type="reset" @click.prevent="resetGuests">
       Oops, Deleted All Guests
@@ -29,22 +31,28 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
+import GuestForm from "../components/GuestForm.vue";
 const GuestRepository = require("../guest-repository");
 const repo = new GuestRepository();
 
 export default {
+  components: {
+    GuestForm,
+  },
   data: () => {
     return {
       guests: [],
+      guestCount: 0,
     };
   },
   async created() {
     this.guests = await repo.load();
+    this.guestCount = this.guests.length;
   },
   methods: {
     addNewGuest: async function (guest) {
-      let NewGuestsArray = [...this.guests, guest];
-      this.guests = await repo.save(NewGuestsArray);
+      this.guests = [...this.guests, guest];
+      await repo.save(this.guests);
     },
     deleteGuest: async function (index) {
       this.guests.splice(index, 1);
