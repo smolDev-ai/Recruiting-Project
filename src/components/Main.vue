@@ -20,7 +20,7 @@
         <b-button v-b-modal.modal-form @click.prevent="toggleEdit(index)"
           >Edit</b-button
         >
-        <b-button class="danger" @click.prevent="deleteGuest(index)"
+        <b-button variant="danger" @click.prevent="deleteGuest(index)"
           >Delete</b-button
         >
       </tr>
@@ -36,7 +36,7 @@
       @cancel="cancelEdit"
     />
     <b-button v-b-modal.modal-form>Create New Guest</b-button>
-    <b-button class="danger" type="reset" @click.prevent="resetGuests">
+    <b-button variant="danger" type="reset" @click.prevent="resetGuests">
       Oops, Deleted All Guests
     </b-button>
   </div>
