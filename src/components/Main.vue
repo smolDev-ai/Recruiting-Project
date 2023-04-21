@@ -17,7 +17,10 @@
         <td>
           {{ guest.tickets }}
         </td>
-        <b-button v-b-modal.modal-form @click.prevent="toggleEdit(index)"
+        <b-button
+          variant="primary"
+          v-b-modal.modal-form
+          @click.prevent="toggleEdit(index)"
           >Edit</b-button
         >
         <b-button variant="danger" @click.prevent="deleteGuest(index)"
@@ -35,7 +38,7 @@
       @update="udpateGuest"
       @cancel="cancelEdit"
     />
-    <b-button v-b-modal.modal-form>Create New Guest</b-button>
+    <b-button variant="success" v-b-modal.modal-form>Create New Guest</b-button>
     <b-button variant="danger" type="reset" @click.prevent="resetGuests">
       Oops, Deleted All Guests
     </b-button>

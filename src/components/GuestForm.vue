@@ -1,5 +1,12 @@
 <template>
-  <b-modal id="modal-form">
+  <b-modal
+    id="modal-form"
+    @cancel="
+      {
+        isEditing ? cancel() : {};
+      }
+    "
+  >
     <form v-if="!isEditing" @submit.prevent="create">
       <input type="e-mail" v-model="guestEmail" name="guestEmail" />
       <input type="number" v-model.number="guestTickets" name="guestTickets" />
