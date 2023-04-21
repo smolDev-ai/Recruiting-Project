@@ -75,14 +75,17 @@ export default {
   },
   methods: {
     getGuestCount: function () {
-      this.guestCount = this.guests.length;
+      let total = 0;
       for (let guest of this.guests) {
-        this.guestCount += guest.tickets;
+        total += guest.tickets;
       }
+
+      this.guestCount = total;
     },
     addNewGuest: async function (guest) {
-      if (this.guestCount !== this.maxGuestCount) {
-        this.guests = [...this.guests, guest];
+      this.guests = [...this.guests, guest];
+      if (this.guestCount <= this.maxGuestCount) {
+        this.getGuestCount();
         await repo.save(this.guests);
       }
     },
