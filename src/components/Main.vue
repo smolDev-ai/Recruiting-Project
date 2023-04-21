@@ -16,12 +16,19 @@
         <td>
           {{ guest.tickets }}
         </td>
-        <td>Edit</td>
+        <td @click.prevent="toggleEdit(index)">Edit</td>
         <td @click.prevent="deleteGuest(index)">Delete</td>
       </tr>
     </table>
     <br /><br />
-    <GuestForm @addNewGuest="addNewGuest" />
+    <GuestForm
+      :currentIndex="currentIndex"
+      :currentGuest="currentGuest"
+      :isEditing="isEditing"
+      @add="addNewGuest"
+      @update="udpateGuest"
+      @cancel="cancelEdit"
+    />
     <button>Create New Guest</button>
     <button type="reset" @click.prevent="resetGuests">
       Oops, Deleted All Guests
@@ -43,6 +50,12 @@ export default {
     return {
       guests: [],
       guestCount: 0,
+      isEditing: false,
+      currentGuest: {
+        guestEmail: "",
+        guestTickets: 0,
+      },
+      currentIndex: 0,
     };
   },
   async created() {
@@ -53,6 +66,31 @@ export default {
     addNewGuest: async function (guest) {
       this.guests = [...this.guests, guest];
       await repo.save(this.guests);
+    },
+    toggleEdit: function (index) {
+      this.isEditing = true;
+      this.guests = this.guests.map((guest, idx) => {
+        if (index !== idx) {
+          return guest;
+        }
+
+        this.currentGuest = guest;
+        this.currentIndex = index;
+        return guest;
+      });
+    },
+    udpateGuest: async function (index, updatedGuest) {
+      this.guests = this.guests.map((guest, idx) => {
+        if (index !== idx) {
+          return guest;
+        }
+
+        return updatedGuest;
+      });
+      await repo.save(this.guests);
+    },
+    cancelEdit: function () {
+      this.isEditing = false;
     },
     deleteGuest: async function (index) {
       this.guests.splice(index, 1);
