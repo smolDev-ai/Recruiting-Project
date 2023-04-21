@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <b-modal id="modal-form">
     <form v-if="!isEditing" @submit.prevent="create">
       <input type="e-mail" v-model="guestEmail" name="guestEmail" />
       <input type="number" v-model.number="guestTickets" name="guestTickets" />
@@ -15,18 +15,21 @@
       <button type="submit">Edit Guest</button>
       <button type="reset" @click="cancel">Cancel Edit</button>
     </form>
-  </div>
+  </b-modal>
 </template>
 
 <script>
 // eslint-disable-next-line no-unused-vars
 export default {
-  props: ["isEditing", "currentGuest", "currentIndex"],
+  props: ["isEditing", "currentGuest", "currentIndex", "showModal"],
   data: () => {
     return {
       guestEmail: "",
       guestTickets: 0,
     };
+  },
+  created() {
+    console.log(this.showModal);
   },
   methods: {
     create() {
@@ -54,5 +57,5 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 </style>

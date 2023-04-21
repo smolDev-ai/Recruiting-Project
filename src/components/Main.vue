@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1>Nyan Cat's Performance</h1>
-    <strong>Total Number of Guests:</strong> {{ guestCount }}<br /><br />
+    <strong>Total Number of Guests:</strong> {{ guestCount }} of
+    {{ maxGuestCount }}<br /><br />
     <table>
       <tr>
         <th>E-mail</th>
@@ -16,8 +17,12 @@
         <td>
           {{ guest.tickets }}
         </td>
-        <td @click.prevent="toggleEdit(index)">Edit</td>
-        <td @click.prevent="deleteGuest(index)">Delete</td>
+        <b-button v-b-modal.modal-form @click.prevent="toggleEdit(index)"
+          >Edit</b-button
+        >
+        <b-button class="danger" @click.prevent="deleteGuest(index)"
+          >Delete</b-button
+        >
       </tr>
     </table>
     <br /><br />
@@ -25,14 +30,15 @@
       :currentIndex="currentIndex"
       :currentGuest="currentGuest"
       :isEditing="isEditing"
+      :showModal="showModal"
       @add="addNewGuest"
       @update="udpateGuest"
       @cancel="cancelEdit"
     />
-    <button>Create New Guest</button>
-    <button type="reset" @click.prevent="resetGuests">
+    <b-button v-b-modal.modal-form>Create New Guest</b-button>
+    <b-button class="danger" type="reset" @click.prevent="resetGuests">
       Oops, Deleted All Guests
-    </button>
+    </b-button>
   </div>
 </template>
 
@@ -50,7 +56,9 @@ export default {
     return {
       guests: [],
       guestCount: 0,
+      showModal: true,
       isEditing: false,
+      maxGuestCount: 20,
       currentGuest: {
         guestEmail: "",
         guestTickets: 0,
@@ -60,12 +68,20 @@ export default {
   },
   async created() {
     this.guests = await repo.load();
-    this.guestCount = this.guests.length;
+    this.getGuestCount();
   },
   methods: {
+    getGuestCount: function () {
+      this.guestCount = this.guests.length;
+      for (let guest of this.guests) {
+        this.guestCount += guest.tickets;
+      }
+    },
     addNewGuest: async function (guest) {
-      this.guests = [...this.guests, guest];
-      await repo.save(this.guests);
+      if (this.guestCount !== this.maxGuestCount) {
+        this.guests = [...this.guests, guest];
+        await repo.save(this.guests);
+      }
     },
     toggleEdit: function (index) {
       this.isEditing = true;
@@ -94,6 +110,7 @@ export default {
     },
     deleteGuest: async function (index) {
       this.guests.splice(index, 1);
+      this.getGuestCount();
       await repo.save(this.guests);
     },
     resetGuests: async function () {
