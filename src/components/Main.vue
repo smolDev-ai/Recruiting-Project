@@ -3,31 +3,41 @@
     <h1>Nyan Cat's Performance</h1>
     <strong>Total Number of Guests:</strong> {{ guestCount }} of
     {{ maxGuestCount }}<br /><br />
-    <table>
-      <tr>
-        <th>E-mail</th>
-        <th># of Tickets</th>
-        <th>Edit Guest</th>
-        <th>Delete Guest</th>
-      </tr>
-      <tr v-for="(guest, index) in guests" :key="index">
-        <td>
-          {{ guest.email }}
-        </td>
-        <td>
-          {{ guest.tickets }}
-        </td>
-        <b-button
-          variant="primary"
-          v-b-modal.modal-form
-          @click.prevent="toggleEdit(index)"
-          >Edit</b-button
-        >
-        <b-button variant="danger" @click.prevent="deleteGuest(index)"
-          >Delete</b-button
-        >
-      </tr>
-    </table>
+    <b-table-simple hover bordered>
+      <b-thead>
+        <b-tr>
+          <b-th>E-mail</b-th>
+          <b-th># of Tickets</b-th>
+          <b-th colspan="2">Actions</b-th>
+        </b-tr>
+      </b-thead>
+      <b-tbody>
+        <b-tr v-for="(guest, index) in guests" :key="index">
+          <b-td>
+            {{ guest.email }}
+          </b-td>
+          <b-td>
+            {{ guest.tickets }}
+          </b-td>
+          <b-td colspan="2">
+            <b-button
+              squared
+              variant="primary"
+              v-b-modal.modal-form
+              class="mr-2"
+              @click.prevent="toggleEdit(index)"
+              >Edit</b-button
+            >
+            <b-button
+              squared
+              variant="danger"
+              @click.prevent="deleteGuest(index)"
+              >Delete</b-button
+            >
+          </b-td>
+        </b-tr>
+      </b-tbody>
+    </b-table-simple>
     <br /><br />
     <GuestForm
       :currentIndex="currentIndex"
@@ -38,7 +48,7 @@
       @update="udpateGuest"
       @cancel="cancelEdit"
     />
-    <b-button variant="success" v-b-modal.modal-form>Create New Guest</b-button>
+    <b-button class="mr-2" variant="success" v-b-modal.modal-form>Create New Guest</b-button>
     <b-button variant="danger" type="reset" @click.prevent="resetGuests">
       Oops, Deleted All Guests
     </b-button>
