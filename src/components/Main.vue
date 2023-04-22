@@ -119,6 +119,7 @@ export default {
 
         return updatedGuest;
       });
+      this.getGuestCount()
       await repo.save(this.guests);
     },
     cancelEdit: function () {
