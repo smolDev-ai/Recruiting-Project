@@ -43,12 +43,13 @@
       :currentIndex="currentIndex"
       :currentGuest="currentGuest"
       :isEditing="isEditing"
-      :showModal="showModal"
       @add="addNewGuest"
       @update="udpateGuest"
       @cancel="cancelEdit"
     />
-    <b-button class="mr-2" variant="success" v-b-modal.modal-form>Create New Guest</b-button>
+    <b-button class="mr-2" variant="success" v-b-modal.modal-form
+      >Create New Guest</b-button
+    >
     <b-button variant="danger" type="reset" @click.prevent="resetGuests">
       Oops, Deleted All Guests
     </b-button>
@@ -69,7 +70,6 @@ export default {
     return {
       guests: [],
       guestCount: 0,
-      showModal: true,
       isEditing: false,
       maxGuestCount: 20,
       currentGuest: {
@@ -119,7 +119,7 @@ export default {
 
         return updatedGuest;
       });
-      this.getGuestCount()
+      this.getGuestCount();
       await repo.save(this.guests);
     },
     cancelEdit: function () {
