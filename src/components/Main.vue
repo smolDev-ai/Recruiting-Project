@@ -131,6 +131,7 @@ export default {
     },
     resetGuests: async function () {
       this.guests = await repo.reset();
+      this.guests = await repo.load();
     },
   },
 };
