@@ -72,7 +72,6 @@ export default {
       guestCount: 0,
       isEditing: false,
       maxGuestCount: 20,
-      message: "",
       currentGuest: {
         guestEmail: "",
         guestTickets: 0,
