@@ -72,6 +72,7 @@ export default {
       guestCount: 0,
       isEditing: false,
       maxGuestCount: 20,
+      message: "",
       currentGuest: {
         guestEmail: "",
         guestTickets: 0,
@@ -91,13 +92,30 @@ export default {
       }
 
       this.guestCount = total;
+      return this.guestCount;
     },
     addNewGuest: async function (guest) {
       this.guests = [...this.guests, guest];
-      if (this.guestCount <= this.maxGuestCount) {
+      if (this.getGuestCount() > this.maxGuestCount) {
+        let tooManyTickets = this.guests.find(
+          ({ email }) => email === guest.email
+        ).tickets;
+        let ticketDifference = this.getGuestCount() - this.maxGuestCount;
+        this.guests.find(({ email }) => email === guest.email).tickets =
+          tooManyTickets - ticketDifference;
         this.getGuestCount();
-        await repo.save(this.guests);
+
+        if (
+          this.guests.find(({ email }) => email === guest.email).tickets <= 0
+        ) {
+          this.guests.splice(-1);
+          this.getGuestCount();
+          repo.save(this.guests);
+        }
       }
+
+      this.getGuestCount();
+      await repo.save(this.guests);
     },
     toggleEdit: function (index) {
       this.isEditing = true;
@@ -111,7 +129,8 @@ export default {
         return guest;
       });
     },
-    udpateGuest: async function (index, updatedGuest) {
+    udpateGuest: async function (args) {
+      const [index, updatedGuest] = args;
       this.guests = this.guests.map((guest, idx) => {
         if (index !== idx) {
           return guest;
@@ -119,8 +138,28 @@ export default {
 
         return updatedGuest;
       });
-      this.getGuestCount();
-      await repo.save(this.guests);
+      if (this.getGuestCount() > this.maxGuestCount) {
+        let tooManyTickets = this.guests.find(
+          ({ email }) => email === updatedGuest.email
+        ).tickets;
+        let ticketDifference = this.getGuestCount() - this.maxGuestCount;
+        this.guests.find(({ email }) => email === updatedGuest.email).tickets =
+          tooManyTickets - ticketDifference;
+
+        this.getGuestCount();
+
+        if (
+          this.guests.find(({ email }) => email === updatedGuest.email)
+            .tickets <= 0
+        ) {
+          this.guests.splice(-1);
+          this.getGuestCount();
+          repo.save(this.guests);
+        }
+      } else {
+        this.getGuestCount();
+        await repo.save(this.guests);
+      }
     },
     cancelEdit: function () {
       this.isEditing = false;

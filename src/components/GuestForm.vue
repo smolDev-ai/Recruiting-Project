@@ -10,7 +10,7 @@
     <b-form v-if="!isEditing" @submit.prevent="create">
       <b-input
         class="mb-2"
-        type="e-mail"
+        type="email"
         v-model="guestEmail"
         name="guestEmail"
       />
@@ -25,7 +25,7 @@
     <b-form v-else @submit.prevent="update">
       <b-input
         class="mb-2"
-        type="e-mail"
+        type="email"
         v-model="currentGuest.email"
         name="guestEmail"
       />
@@ -54,9 +54,6 @@ export default {
       guestEmail: "",
       guestTickets: 0,
     };
-  },
-  created() {
-    console.log(this.showModal);
   },
   methods: {
     create() {
